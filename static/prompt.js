@@ -20,6 +20,7 @@ const converter = new showdown.Converter({ extensions: ['only-inline-stuff'], st
 const promptForm = document.getElementById("prompt-form");
 const submitButton = document.getElementById("submit-button");
 const importButton = document.getElementById("import-button");
+const qcmButton = document.getElementById("qcm-button");
 const questionButton = document.getElementById("question-button");
 const messagesContainer = document.getElementById("messages-container");
 
@@ -92,9 +93,11 @@ const handleQuestionClick = async (event) => {
 
 questionButton.addEventListener("click", handleQuestionClick);
 
-//Mode sombre 
+
+// Mode sombre 
 
 // Fonction pour basculer le mode sombre
+
 function toggleDarkMode() {
   const body = document.body;
   const root = document.documentElement;
@@ -116,6 +119,7 @@ function toggleDarkMode() {
 
 
 // Ajouter un écouteur d'événement au bouton
+
 document.getElementById('toggle-mode').addEventListener('click', toggleDarkMode);
 
 const handleImportClick = () => {
@@ -156,3 +160,19 @@ const handleImportClick = () => {
 }
 
 importButton.addEventListener("click", handleImportClick);
+
+
+
+// QCM interractif
+
+const handleQcmClick = async () => {
+  console.log("On a cliqué sur le bouton !");
+  const response = await fetch("/question", {
+    method: "GET",
+  });
+  const result = await response.json();
+  const qcm = result.answer;
+  console.log(qcm)
+}
+
+qcmButton.addEventListener("click", handleQcmClick);
