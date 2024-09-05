@@ -98,19 +98,21 @@ questionButton.addEventListener("click", handleQuestionClick);
 function toggleDarkMode() {
   const body = document.body;
   const root = document.documentElement;
-
+  const button = document.getElementById('toggle-mode');
 
   if (body.classList.contains('light-mode')) {
     // Basculer vers le mode sombre
     body.classList.remove('light-mode');
     body.classList.add('dark-mode');
     root.style.setProperty('--main-background-color', '#121212');
+    button.innerHTML = "&#x2600";
 
   } else {
     // Basculer vers le mode clair
     body.classList.remove('dark-mode');
     body.classList.add('light-mode');
     root.style.setProperty('--main-background-color', '#f5f6f8');
+    button.innerHTML = "&#x1F319";
   }
 }
 
@@ -156,3 +158,4 @@ const handleImportClick = () => {
 }
 
 importButton.addEventListener("click", handleImportClick);
+
