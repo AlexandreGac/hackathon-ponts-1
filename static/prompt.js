@@ -105,22 +105,19 @@ questionButton.addEventListener("click", handleQuestionClick);
 // Fonction pour basculer le mode sombre
 function toggleDarkMode() {
   const body = document.body;
-  const root = document.documentElement;
   const button = document.getElementById('toggle-mode');
 
   if (body.classList.contains('light-mode')) {
     // Basculer vers le mode sombre
     body.classList.remove('light-mode');
     body.classList.add('dark-mode');
-    root.style.setProperty('--main-background-color', '#121212');
-    button.innerHTML = "&#x2600";
+    button.innerHTML = "☀️";
 
   } else {
     // Basculer vers le mode clair
     body.classList.remove('dark-mode');
     body.classList.add('light-mode');
-    root.style.setProperty('--main-background-color', '#f5f6f8');
-    button.innerHTML = "&#x1F319";
+    button.innerHTML = "🌙";
   }
 }
 
@@ -129,14 +126,19 @@ document.getElementById('toggle-mode').addEventListener('click', toggleDarkMode)
 
 // Optionnel : Vérifier le mode préféré de l'utilisateur au chargement de la page
 function checkPreferredColorScheme() {
+  const body = document.body;
+  const button = document.getElementById('toggle-mode');
+
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.body.classList.remove('light-mode');
-    document.body.classList.add('dark-mode');
-    document.getElementById('toggle-mode').textContent = 'Mode Clair';
+    // Basculer vers le mode sombre
+    body.classList.remove('light-mode');
+    body.classList.add('dark-mode');
+    button.innerHTML = "☀️";
   } else {
-    document.body.classList.remove('dark-mode');
-    document.body.classList.add('light-mode');
-    document.getElementById('toggle-mode').textContent = 'Mode Sombre';
+    // Basculer vers le mode clair
+    body.classList.remove('dark-mode');
+    body.classList.add('light-mode');
+    button.innerHTML = "🌙";
   }
 }
 
