@@ -23,6 +23,11 @@ const importButton = document.getElementById("import-button");
 const questionButton = document.getElementById("question-button");
 const messagesContainer = document.getElementById("messages-container");
 
+// Fonction pour défiler vers le bas
+const scrollToBottom = () => {
+  window.scrollTo(0, document.body.scrollHeight);
+};
+
 const appendHumanMessage = (message) => {
   const humanMessageElement = document.createElement("div");
   humanMessageElement.classList.add("message", "message-human");
@@ -37,6 +42,7 @@ const appendAIMessage = async (messagePromise) => {
   loaderElement.innerHTML =
     "<div class='loader'><div></div><div></div><div></div>";
   messagesContainer.appendChild(loaderElement);
+  scrollToBottom();  // Faire défiler automatiquement
 
   // Await the answer from the server
   const messageToAppend = await messagePromise();
@@ -44,6 +50,8 @@ const appendAIMessage = async (messagePromise) => {
   // Replace the loader with the answer
   loaderElement.classList.remove("loader");
   loaderElement.innerHTML = messageToAppend;
+
+  scrollToBottom();  // Faire défiler automatiquement
 };
 
 const handlePrompt = async (event) => {
@@ -58,7 +66,7 @@ const handlePrompt = async (event) => {
     data.append("question", questionButton.dataset.question);
     delete questionButton.dataset.question;
     questionButton.classList.remove("hidden");
-    submitButton.innerHTML = "Message";
+    submitButton.innerHTML = "Envoyer";
   }
 
   appendHumanMessage(data.get("prompt"));
@@ -116,9 +124,24 @@ function toggleDarkMode() {
   }
 }
 
-
 // Ajouter un écouteur d'événement au bouton
 document.getElementById('toggle-mode').addEventListener('click', toggleDarkMode);
+
+// Optionnel : Vérifier le mode préféré de l'utilisateur au chargement de la page
+function checkPreferredColorScheme() {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.body.classList.remove('light-mode');
+    document.body.classList.add('dark-mode');
+    document.getElementById('toggle-mode').textContent = 'Mode Clair';
+  } else {
+    document.body.classList.remove('dark-mode');
+    document.body.classList.add('light-mode');
+    document.getElementById('toggle-mode').textContent = 'Mode Sombre';
+  }
+}
+
+// Appeler cette fonction au chargement de la page
+window.addEventListener('load', checkPreferredColorScheme);
 
 const handleImportClick = () => {
   // Create an input element dynamically
@@ -158,4 +181,3 @@ const handleImportClick = () => {
 }
 
 importButton.addEventListener("click", handleImportClick);
-
