@@ -11,6 +11,8 @@ from src.utils.ask_question_to_pdf import (
     read_pdf,
 )
 
+import ast, re  # Pour le QCM
+
 app = Flask(__name__)
 
 
@@ -104,3 +106,11 @@ def upload_file():
     return {
         "error": "Invalid file type. Only PDFs, TXT, HTML, and MD are allowed."
     }, 400
+
+
+@app.route("/qcm", methods=["GET"])
+def qcm():
+    result = ask_question_to_pdf(
+        "Pose moi une question sur le texte avec 4 propositions de réponse sans la solution."
+    )
+    return {"answer": result}

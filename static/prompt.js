@@ -59,7 +59,14 @@ const handlePrompt = async (event) => {
     data.append("question", questionButton.dataset.question);
     delete questionButton.dataset.question;
     questionButton.classList.remove("hidden");
-    submitButton.innerHTML = "Message";
+    submitButton.innerHTML = "Envoyer";
+  }
+  if (qcmButton.dataset.question !== undefined) {  // Pour le bouton QCM
+    url = "/answer";
+    data.append("question", qcmButton.dataset.question);
+    delete qcmButton.dataset.question;
+    qcmButton.classList.remove("hidden");
+    submitButton.innerHTML = "Envoyer";
   }
 
   appendHumanMessage(data.get("prompt"));
@@ -86,7 +93,7 @@ const handleQuestionClick = async (event) => {
 
     questionButton.dataset.question = question;
     questionButton.classList.add("hidden");
-    submitButton.innerHTML = "Répondre à la question";
+    submitButton.innerHTML = "Répondre";
     return question;
   });
 };
@@ -165,14 +172,19 @@ importButton.addEventListener("click", handleImportClick);
 
 // QCM interractif
 
-const handleQcmClick = async () => {
-  console.log("On a cliqué sur le bouton !");
-  const response = await fetch("/question", {
-    method: "GET",
+const handleQcmClick = async (event) => {
+  appendAIMessage(async () => {
+    const response = await fetch("/qcm", {
+      method: "GET",
+    });
+    const result = await response.json();
+    const qcm = converter.makeHtml(result.answer);  // md. -> .html for question
+
+    qcmButton.dataset.question = qcm;
+    qcmButton.classList.add("hidden");
+    submitButton.innerHTML = "Répondre";
+    return qcm;
   });
-  const result = await response.json();
-  const qcm = result.answer;
-  console.log(qcm)
-}
+};
 
 qcmButton.addEventListener("click", handleQcmClick);
