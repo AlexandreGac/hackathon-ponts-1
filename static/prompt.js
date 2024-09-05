@@ -24,6 +24,12 @@ const qcmButton = document.getElementById("qcm-button");
 const questionButton = document.getElementById("question-button");
 const messagesContainer = document.getElementById("messages-container");
 
+// Boutons réponse pour le QCM
+const AButton = document.getElementById("A-button");
+const BButton = document.getElementById("B-button");
+const CButton = document.getElementById("C-button");
+const DButton = document.getElementById("D-button");
+
 const appendHumanMessage = (message) => {
   const humanMessageElement = document.createElement("div");
   humanMessageElement.classList.add("message", "message-human");
@@ -47,13 +53,43 @@ const appendAIMessage = async (messagePromise) => {
   loaderElement.innerHTML = messageToAppend;
 };
 
-const handlePrompt = async (event) => {
+const handlePrompt = async (event) => {  // A recopier puis modifier
   event.preventDefault();
   // Parse form data in a structured object
   const data = new FormData(event.target);
   promptForm.reset();
 
   let url = "/prompt";
+
+  // Afficher les boutons précédemment cachés
+  if (questionButton.dataset.hidden !== undefined) {
+    questionButton.classList.remove("hidden");
+  }
+  if (importButton.dataset.hidden !== undefined) {
+    importButton.classList.remove("hidden");
+  }
+  if (qcmButton.dataset.hidden !== undefined) {
+    qcmButton.classList.remove("hidden");
+  }
+
+  // Cacher les boutons de réponses au QCM
+  if (AButton.dataset.display !== undefined) {
+    delete AButton.dataset.display;
+    AButton.classList.add("hidden");
+  }
+  if (BButton.dataset.display !== undefined) {
+    delete BButton.dataset.display;
+    BButton.classList.add("hidden");
+  }
+  if (CButton.dataset.display !== undefined) {
+    delete CButton.dataset.display;
+    CButton.classList.add("hidden");
+  }
+  if (DButton.dataset.display !== undefined) {
+    delete DButton.dataset.display;
+    DButton.classList.add("hidden");
+  }
+
   if (questionButton.dataset.question !== undefined) {
     url = "/answer";
     data.append("question", questionButton.dataset.question);
@@ -61,6 +97,7 @@ const handlePrompt = async (event) => {
     questionButton.classList.remove("hidden");
     submitButton.innerHTML = "Envoyer";
   }
+
   if (qcmButton.dataset.question !== undefined) {  // Pour le bouton QCM
     url = "/answer";
     data.append("question", qcmButton.dataset.question);
@@ -94,6 +131,13 @@ const handleQuestionClick = async (event) => {
     questionButton.dataset.question = question;
     questionButton.classList.add("hidden");
     submitButton.innerHTML = "Répondre";
+
+    // Pour cacher les autres boutons
+    qcmButton.dataset.hidden = true;
+    qcmButton.classList.add("hidden");
+    importButton.dataset.hidden = true;
+    importButton.classList.add("hidden");
+
     return question;
   });
 };
@@ -182,9 +226,32 @@ const handleQcmClick = async (event) => {
 
     qcmButton.dataset.question = qcm;
     qcmButton.classList.add("hidden");
+
+    // Pour cacher les autres boutons
+    questionButton.dataset.hidden = true;
+    questionButton.classList.add("hidden");
+    importButton.dataset.hidden = true;
+    importButton.classList.add("hidden");
+
+    // Et afficher les boutons réponse
+    AButton.dataset.display = true;
+    AButton.classList.remove("hidden");
+    BButton.dataset.display = true;
+    BButton.classList.remove("hidden");
+    CButton.dataset.display = true;
+    CButton.classList.remove("hidden");
+    DButton.dataset.display = true;
+    DButton.classList.remove("hidden");
+
     submitButton.innerHTML = "Répondre";
     return qcm;
   });
 };
 
 qcmButton.addEventListener("click", handleQcmClick);
+
+// const handleAClick = async (event) => {
+//   appendHumanMessage("A");
+// };
+//
+// AButton.addEventListener("click", handleAClick);
