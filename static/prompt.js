@@ -94,29 +94,41 @@ questionButton.addEventListener("click", handleQuestionClick);
 
 //Mode sombre 
 
-// Fonction pour basculer le mode sombre
 function toggleDarkMode() {
   const body = document.body;
-  const root = document.documentElement;
-
+  const toggleButton = document.getElementById('toggle-mode');
 
   if (body.classList.contains('light-mode')) {
     // Basculer vers le mode sombre
     body.classList.remove('light-mode');
     body.classList.add('dark-mode');
-    root.style.setProperty('--main-background-color', '#121212');
-
+    toggleButton.textContent = 'Mode Clair';
   } else {
     // Basculer vers le mode clair
     body.classList.remove('dark-mode');
     body.classList.add('light-mode');
-    root.style.setProperty('--main-background-color', '#f5f6f8');
+    toggleButton.textContent = 'Mode Sombre';
   }
 }
 
-
 // Ajouter un écouteur d'événement au bouton
 document.getElementById('toggle-mode').addEventListener('click', toggleDarkMode);
+
+// Optionnel : Vérifier le mode préféré de l'utilisateur au chargement de la page
+function checkPreferredColorScheme() {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.body.classList.remove('light-mode');
+    document.body.classList.add('dark-mode');
+    document.getElementById('toggle-mode').textContent = 'Mode Clair';
+  } else {
+    document.body.classList.remove('dark-mode');
+    document.body.classList.add('light-mode');
+    document.getElementById('toggle-mode').textContent = 'Mode Sombre';
+  }
+}
+
+// Appeler cette fonction au chargement de la page
+window.addEventListener('load', checkPreferredColorScheme);
 
 const handleImportClick = () => {
   // Create an input element dynamically

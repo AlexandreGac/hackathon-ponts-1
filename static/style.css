@@ -1,28 +1,25 @@
 :root {
-  --body-background-color: #f5f6f8;
-  --main-background-color: #ffffff;
-  --main-color: #2a303b;
   --max-body-width: 700px;
-  --border-color: #cccccc;
-  --secondary-color: #f3f31d;
   --loader-bullet-size: 6px;
 }
 
-.dark-mode {
-  --body-background-color: #121212;
-  --main-background-color: #1e1e1e;
-  --main-color: #e0e0e0;
-  --border-color: #333333;
-  --secondary-color: #54540b;
-}
-
-/* Mode sombre */
-
 .light-mode {
-  --body-background-color: #ffffff;
-  color: #000000;
+  --body-background-color: #E9EFEC;
+  --main-background-color: #ffffff;
+  --main-color: #16423C;
+  --border-color: #6A9C89;
+  --secondary-color: #6A9C89;
+  --light-green: #C4DAD2;
 }
 
+.dark-mode {
+  --body-background-color: #232323; /* Fond global - Vert très sombre */
+  --main-background-color: #151515; /* Fond des containers - Vert sombre */
+  --main-color: #ffffff; /* Texte principal - Vert pâle */
+  --border-color: #043a22; /* Bordures - Vert gris */
+  --secondary-color: #086b3e; /* Boutons et accents - Vert vif */
+  --light-green: #043a22; /* Couleur des ombres ou éléments mineurs */
+}
 
 * {
   box-sizing: border-box;
@@ -30,19 +27,40 @@
 
 body {
   background-color: var(--body-background-color);
+  color: var(--main-color);
   padding: 0;
   margin: 0;
   font-family: sans-serif;
 }
 
-
 .main-container {
   max-width: var(--max-body-width);
   min-height: 100vh;
   background-color: var(--main-background-color);
-  color: var(--main-color);
   padding: 50px;
   margin: 0 auto;
+  position: relative;
+  box-shadow:
+    -20px 0 0 var(--light-green),
+    20px 0 0 var(--light-green);
+}
+
+.main-container::before,
+.main-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background-color: var(--light-green);
+}
+
+.main-container::before {
+  left: -20px;
+}
+
+.main-container::after {
+  right: -20px;
 }
 
 .header {
@@ -61,13 +79,15 @@ body {
 }
 
 .message {
-  border: 1px solid black;
+  border: 1px solid var(--border-color);
   border-radius: 5px;
   padding: 10px 15px;
+  margin-bottom: 10px;
 }
 
 .message-human {
-  background-color: var(--secondary-color);
+  background-color: var(--light-green);
+  color: var(--main-color);
 }
 
 .prompt-container {
@@ -81,32 +101,63 @@ body {
   gap: 10px;
   background-color: var(--main-background-color);
   padding: 20px;
-  border-top: 1px solid BLACK;
+  border-top: 1px solid var(--border-color);
 }
 
 .prompt-label {
   font-weight: bold;
+  color: var(--main-color);
 }
 
 .prompt-input {
   flex-grow: 1;
-  border: 1px solid black;
+  border: 1px solid var(--border-color);
   border-radius: 5px;
   padding: 5px;
+  background-color: var(--main-background-color);
+  color: var(--main-color);
 }
 
 .button {
-  border: 1px solid BLACK;
-  padding: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--secondary-color);
+  color: #ffffff;
+  padding: 5px 10px;
   border-radius: 5px;
-  background-color: var(--body-background-color);
-  color: var(--main-color)
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .button:hover,
 .button:active {
+  background-color: var(--main-color);
+  color: var(--body-background-color);
+}
+
+.dark-mode .message {
+  border-color: var(--secondary-color);
+}
+
+.dark-mode .message-human {
+  background-color: var(--light-green);
+  border-color: var(--secondary-color);
+}
+
+.dark-mode .prompt-input {
   background-color: var(--body-background-color);
-  cursor: pointer;
+  color: #e0e0e0;
+  border-color: #4a4a4a;
+}
+
+.dark-mode .button {
+  background-color: var(--border-color);
+  color: #ffffff;
+  border-color: #4a4a4a;
+}
+
+.dark-mode .button:hover,
+.dark-mode .button:active {
+  background-color: #0f1f0d;
 }
 
 .hidden {
@@ -127,7 +178,7 @@ body {
   width: var(--loader-bullet-size);
   height: var(--loader-bullet-size);
   border-radius: 50%;
-  background-color: var(--body-background-color);
+  background-color: var(--main-color);
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 
@@ -151,13 +202,10 @@ body {
   animation: loader3 0.6s infinite;
 }
 
-
-
 @keyframes loader1 {
   0% {
     transform: scale(0);
   }
-
   100% {
     transform: scale(1);
   }
@@ -167,7 +215,6 @@ body {
   0% {
     transform: scale(1);
   }
-
   100% {
     transform: scale(0);
   }
@@ -177,7 +224,6 @@ body {
   0% {
     transform: translate(0, 0);
   }
-
   100% {
     transform: translate(calc(var(--loader-bullet-size) * 2), 0);
   }
