@@ -307,9 +307,3 @@ const handleD = async (event) => {
 }
 
 DButton.addEventListener("click", handleD);
-
-// const handleAClick = async (event) => {
-//   appendHumanMessage("A");
-// };
-//
-// AButton.addEventListener("click", handleAClick);
