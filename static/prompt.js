@@ -160,11 +160,7 @@ const handleQuestionClick = async (event) => {
 
 questionButton.addEventListener("click", handleQuestionClick);
 
-
-// Mode sombre 
-
 // Fonction pour basculer le mode sombre
-
 function toggleDarkMode() {
   const body = document.body;
   const button = document.getElementById('toggle-mode');
@@ -174,7 +170,6 @@ function toggleDarkMode() {
     body.classList.remove('light-mode');
     body.classList.add('dark-mode');
     button.innerHTML = "☀️";
-
   } else {
     // Basculer vers le mode clair
     body.classList.remove('dark-mode');
@@ -184,7 +179,6 @@ function toggleDarkMode() {
 }
 
 // Ajouter un écouteur d'événement au bouton
-
 document.getElementById('toggle-mode').addEventListener('click', toggleDarkMode);
 
 // Optionnel : Vérifier le mode préféré de l'utilisateur au chargement de la page
@@ -246,8 +240,6 @@ const handleImportClick = () => {
 }
 
 importButton.addEventListener("click", handleImportClick);
-
-
 
 // QCM interractif
 
@@ -334,3 +326,18 @@ const handleD = async (event) => {
 }
 
 DButton.addEventListener("click", handleD);
+
+const audioToggleButton = document.getElementById('audio-toggle');
+const backgroundMusic = document.getElementById('background-music');
+let isPlaying = false;
+
+audioToggleButton.addEventListener('click', () => {
+  if (isPlaying) {
+    backgroundMusic.pause();
+    audioToggleButton.textContent = '🔊'; // Icône quand le son est éteint
+  } else {
+    backgroundMusic.play();
+    audioToggleButton.textContent = '🔇'; // Icône quand le son est allumé
+  }
+  isPlaying = !isPlaying;
+});

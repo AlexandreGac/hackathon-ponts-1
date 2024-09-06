@@ -136,13 +136,21 @@ body {
 .buttonmode {
   cursor: pointer;
   border: none;
-  padding: 0;
   background-color: transparent;
-  color: yellow;
   font-size: 50px;
   position: fixed;
   top: 20px;
   left: 50px;
+}
+
+.audio-button {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  font-size: 50px;
+  position: fixed;
+  top: 20px;
+  right: 50px;
 }
 
 .button:hover,
