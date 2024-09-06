@@ -53,15 +53,7 @@ const appendAIMessage = async (messagePromise) => {
   loaderElement.innerHTML = messageToAppend;
 };
 
-const handlePrompt = async (event) => {  // A recopier puis modifier
-  event.preventDefault();
-  // Parse form data in a structured object
-  const data = new FormData(event.target);
-  promptForm.reset();
-
-  let url = "/prompt";
-
-  // Afficher les boutons précédemment cachés
+const displayButtons = () => {
   if (questionButton.dataset.hidden !== undefined) {
     questionButton.classList.remove("hidden");
   }
@@ -71,8 +63,9 @@ const handlePrompt = async (event) => {  // A recopier puis modifier
   if (qcmButton.dataset.hidden !== undefined) {
     qcmButton.classList.remove("hidden");
   }
+}
 
-  // Cacher les boutons de réponses au QCM
+const hideQcmButtons = () => {
   if (AButton.dataset.display !== undefined) {
     delete AButton.dataset.display;
     AButton.classList.add("hidden");
@@ -89,6 +82,21 @@ const handlePrompt = async (event) => {  // A recopier puis modifier
     delete DButton.dataset.display;
     DButton.classList.add("hidden");
   }
+}
+
+const handlePrompt = async (event) => {  // A recopier puis modifier
+  event.preventDefault();
+  // Parse form data in a structured object
+  const data = new FormData(event.target);
+  promptForm.reset();
+
+  let url = "/prompt";
+
+  // Afficher les boutons précédemment cachés
+  displayButtons();
+
+  // Cacher les boutons de réponses au QCM
+  hideQcmButtons();
 
   if (questionButton.dataset.question !== undefined) {
     url = "/answer";
@@ -249,6 +257,56 @@ const handleQcmClick = async (event) => {
 };
 
 qcmButton.addEventListener("click", handleQcmClick);
+
+const handleQcmAnswer = async (event, answer) => {
+  // Afficher les boutons précédemment cachés
+  displayButtons();
+
+  // Cacher les boutons de réponses au QCM
+  hideQcmButtons();
+
+  // Pour le bouton QCM
+  qcmButton.classList.remove("hidden");
+  submitButton.innerHTML = "Envoyer";
+
+  appendHumanMessage(answer);
+
+  const data = new FormData();
+  data.append("answer", answer);
+
+  appendAIMessage(async () => {
+    const response = await fetch("/qcmAnswer", {
+      method: "POST",
+      body: data,
+    });
+    const result = await response.json();
+    return converter.makeHtml(result.answer);  // md. -> .html for question
+  });
+};
+
+const handleA = async (event) => {
+  handleQcmAnswer(event, "Réponse A")
+}
+
+AButton.addEventListener("click", handleA);
+
+const handleB = async (event) => {
+  handleQcmAnswer(event, "Réponse B")
+}
+
+BButton.addEventListener("click", handleB);
+
+const handleC = async (event) => {
+  handleQcmAnswer(event, "Réponse C")
+}
+
+CButton.addEventListener("click", handleC);
+
+const handleD = async (event) => {
+  handleQcmAnswer(event, "Réponse D")
+}
+
+DButton.addEventListener("click", handleD);
 
 // const handleAClick = async (event) => {
 //   appendHumanMessage("A");

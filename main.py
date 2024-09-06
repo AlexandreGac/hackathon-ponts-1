@@ -30,7 +30,9 @@ def prompt():
 
 @app.route("/question", methods=["GET"])
 def question():
-    answer = ask_question_to_pdf("Pose-moi une question sur le texte.")
+    answer = ask_question_to_pdf(
+        "Pose-moi une question sur le texte sans proposition de réponse."
+    )
     return {"answer": answer}
 
 
@@ -113,4 +115,10 @@ def qcm():
     result = ask_question_to_pdf(
         "Pose moi une question sur le texte avec 4 propositions de réponse sans la solution."
     )
+    return {"answer": result}
+
+
+@app.route("/qcmAnswer", methods=["POST"])
+def answerA():
+    result = ask_question_to_pdf(request.form["answer"])
     return {"answer": result}
