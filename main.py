@@ -12,8 +12,6 @@ from src.utils.ask_question_to_pdf import (
     read_pdf,
 )
 
-import ast, re  # Pour le QCM
-
 app = Flask(__name__)
 
 
