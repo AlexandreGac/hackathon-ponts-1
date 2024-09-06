@@ -30,6 +30,11 @@ const BButton = document.getElementById("B-button");
 const CButton = document.getElementById("C-button");
 const DButton = document.getElementById("D-button");
 
+// Fonction pour défiler vers le bas
+const scrollToBottom = () => {
+  window.scrollTo(0, document.body.scrollHeight);
+};
+
 const appendHumanMessage = (message) => {
   const humanMessageElement = document.createElement("div");
   humanMessageElement.classList.add("message", "message-human");
@@ -44,6 +49,7 @@ const appendAIMessage = async (messagePromise) => {
   loaderElement.innerHTML =
     "<div class='loader'><div></div><div></div><div></div>";
   messagesContainer.appendChild(loaderElement);
+  scrollToBottom();  // Faire défiler automatiquement
 
   // Await the answer from the server
   const messageToAppend = await messagePromise();
@@ -51,6 +57,8 @@ const appendAIMessage = async (messagePromise) => {
   // Replace the loader with the answer
   loaderElement.classList.remove("loader");
   loaderElement.innerHTML = messageToAppend;
+
+  scrollToBottom();  // Faire défiler automatiquement
 };
 
 const displayButtons = () => {
@@ -159,27 +167,46 @@ questionButton.addEventListener("click", handleQuestionClick);
 
 function toggleDarkMode() {
   const body = document.body;
-  const root = document.documentElement;
-
+  const button = document.getElementById('toggle-mode');
 
   if (body.classList.contains('light-mode')) {
     // Basculer vers le mode sombre
     body.classList.remove('light-mode');
     body.classList.add('dark-mode');
-    root.style.setProperty('--main-background-color', '#121212');
+    button.innerHTML = "☀️";
 
   } else {
     // Basculer vers le mode clair
     body.classList.remove('dark-mode');
     body.classList.add('light-mode');
-    root.style.setProperty('--main-background-color', '#f5f6f8');
+    button.innerHTML = "🌙";
   }
 }
-
 
 // Ajouter un écouteur d'événement au bouton
 
 document.getElementById('toggle-mode').addEventListener('click', toggleDarkMode);
+
+// Optionnel : Vérifier le mode préféré de l'utilisateur au chargement de la page
+function checkPreferredColorScheme() {
+  const body = document.body;
+  const button = document.getElementById('toggle-mode');
+
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    // Basculer vers le mode sombre
+    body.classList.remove('light-mode');
+    body.classList.add('dark-mode');
+    button.innerHTML = "☀️";
+  } else {
+    // Basculer vers le mode clair
+    body.classList.remove('dark-mode');
+    body.classList.add('light-mode');
+    button.innerHTML = "🌙";
+  }
+}
+
+// Appeler cette fonction au chargement de la page
+window.addEventListener('load', checkPreferredColorScheme);
 
 const handleImportClick = () => {
   // Create an input element dynamically
