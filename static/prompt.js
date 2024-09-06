@@ -20,8 +20,15 @@ const converter = new showdown.Converter({ extensions: ['only-inline-stuff'], st
 const promptForm = document.getElementById("prompt-form");
 const submitButton = document.getElementById("submit-button");
 const importButton = document.getElementById("import-button");
+const qcmButton = document.getElementById("qcm-button");
 const questionButton = document.getElementById("question-button");
 const messagesContainer = document.getElementById("messages-container");
+
+// Boutons réponse pour le QCM
+const AButton = document.getElementById("A-button");
+const BButton = document.getElementById("B-button");
+const CButton = document.getElementById("C-button");
+const DButton = document.getElementById("D-button");
 
 // Fonction pour défiler vers le bas
 const scrollToBottom = () => {
@@ -54,18 +61,64 @@ const appendAIMessage = async (messagePromise) => {
   scrollToBottom();  // Faire défiler automatiquement
 };
 
-const handlePrompt = async (event) => {
+const displayButtons = () => {
+  if (questionButton.dataset.hidden !== undefined) {
+    questionButton.classList.remove("hidden");
+  }
+  if (importButton.dataset.hidden !== undefined) {
+    importButton.classList.remove("hidden");
+  }
+  if (qcmButton.dataset.hidden !== undefined) {
+    qcmButton.classList.remove("hidden");
+  }
+}
+
+const hideQcmButtons = () => {
+  if (AButton.dataset.display !== undefined) {
+    delete AButton.dataset.display;
+    AButton.classList.add("hidden");
+  }
+  if (BButton.dataset.display !== undefined) {
+    delete BButton.dataset.display;
+    BButton.classList.add("hidden");
+  }
+  if (CButton.dataset.display !== undefined) {
+    delete CButton.dataset.display;
+    CButton.classList.add("hidden");
+  }
+  if (DButton.dataset.display !== undefined) {
+    delete DButton.dataset.display;
+    DButton.classList.add("hidden");
+  }
+}
+
+const handlePrompt = async (event) => {  // A recopier puis modifier
   event.preventDefault();
   // Parse form data in a structured object
   const data = new FormData(event.target);
   promptForm.reset();
 
   let url = "/prompt";
+
+  // Afficher les boutons précédemment cachés
+  displayButtons();
+
+  // Cacher les boutons de réponses au QCM
+  hideQcmButtons();
+
   if (questionButton.dataset.question !== undefined) {
     url = "/answer";
     data.append("question", questionButton.dataset.question);
     delete questionButton.dataset.question;
     questionButton.classList.remove("hidden");
+    submitButton.innerHTML = "Envoyer";
+  }
+
+  if (qcmButton.dataset.question !== undefined) {  // Pour le bouton QCM
+    url = "/answer";
+    data.append("question", qcmButton.dataset.question);
+    delete qcmButton.dataset.question;
+    qcmButton.classList.remove("hidden");
     submitButton.innerHTML = "Envoyer";
   }
 
@@ -93,16 +146,25 @@ const handleQuestionClick = async (event) => {
 
     questionButton.dataset.question = question;
     questionButton.classList.add("hidden");
-    submitButton.innerHTML = "Répondre à la question";
+    submitButton.innerHTML = "Répondre";
+
+    // Pour cacher les autres boutons
+    qcmButton.dataset.hidden = true;
+    qcmButton.classList.add("hidden");
+    importButton.dataset.hidden = true;
+    importButton.classList.add("hidden");
+
     return question;
   });
 };
 
 questionButton.addEventListener("click", handleQuestionClick);
 
-//Mode sombre 
+
+// Mode sombre 
 
 // Fonction pour basculer le mode sombre
+
 function toggleDarkMode() {
   const body = document.body;
   const button = document.getElementById('toggle-mode');
@@ -122,6 +184,7 @@ function toggleDarkMode() {
 }
 
 // Ajouter un écouteur d'événement au bouton
+
 document.getElementById('toggle-mode').addEventListener('click', toggleDarkMode);
 
 // Optionnel : Vérifier le mode préféré de l'utilisateur au chargement de la page
@@ -183,3 +246,91 @@ const handleImportClick = () => {
 }
 
 importButton.addEventListener("click", handleImportClick);
+
+
+
+// QCM interractif
+
+const handleQcmClick = async (event) => {
+  appendAIMessage(async () => {
+    const response = await fetch("/qcm", {
+      method: "GET",
+    });
+    const result = await response.json();
+    const qcm = converter.makeHtml(result.answer);  // md. -> .html for question
+
+    qcmButton.dataset.question = qcm;
+    qcmButton.classList.add("hidden");
+
+    // Pour cacher les autres boutons
+    questionButton.dataset.hidden = true;
+    questionButton.classList.add("hidden");
+    importButton.dataset.hidden = true;
+    importButton.classList.add("hidden");
+
+    // Et afficher les boutons réponse
+    AButton.dataset.display = true;
+    AButton.classList.remove("hidden");
+    BButton.dataset.display = true;
+    BButton.classList.remove("hidden");
+    CButton.dataset.display = true;
+    CButton.classList.remove("hidden");
+    DButton.dataset.display = true;
+    DButton.classList.remove("hidden");
+
+    submitButton.innerHTML = "Répondre";
+    return qcm;
+  });
+};
+
+qcmButton.addEventListener("click", handleQcmClick);
+
+const handleQcmAnswer = async (event, answer) => {
+  // Afficher les boutons précédemment cachés
+  displayButtons();
+
+  // Cacher les boutons de réponses au QCM
+  hideQcmButtons();
+
+  // Pour le bouton QCM
+  qcmButton.classList.remove("hidden");
+  submitButton.innerHTML = "Envoyer";
+
+  appendHumanMessage(answer);
+
+  const data = new FormData();
+  data.append("answer", answer);
+
+  appendAIMessage(async () => {
+    const response = await fetch("/qcmAnswer", {
+      method: "POST",
+      body: data,
+    });
+    const result = await response.json();
+    return converter.makeHtml(result.answer);  // md. -> .html for question
+  });
+};
+
+const handleA = async (event) => {
+  handleQcmAnswer(event, "Réponse A")
+}
+
+AButton.addEventListener("click", handleA);
+
+const handleB = async (event) => {
+  handleQcmAnswer(event, "Réponse B")
+}
+
+BButton.addEventListener("click", handleB);
+
+const handleC = async (event) => {
+  handleQcmAnswer(event, "Réponse C")
+}
+
+CButton.addEventListener("click", handleC);
+
+const handleD = async (event) => {
+  handleQcmAnswer(event, "Réponse D")
+}
+
+DButton.addEventListener("click", handleD);
