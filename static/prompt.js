@@ -112,7 +112,6 @@ function toggleDarkMode() {
     body.classList.remove('light-mode');
     body.classList.add('dark-mode');
     button.innerHTML = "☀️";
-
   } else {
     // Basculer vers le mode clair
     body.classList.remove('dark-mode');
@@ -183,3 +182,18 @@ const handleImportClick = () => {
 }
 
 importButton.addEventListener("click", handleImportClick);
+
+const audioToggleButton = document.getElementById('audio-toggle');
+const backgroundMusic = document.getElementById('background-music');
+let isPlaying = false;
+
+audioToggleButton.addEventListener('click', () => {
+  if (isPlaying) {
+    backgroundMusic.pause();
+    audioToggleButton.textContent = '🔊'; // Icône quand le son est éteint
+  } else {
+    backgroundMusic.play();
+    audioToggleButton.textContent = '🔇'; // Icône quand le son est allumé
+  }
+  isPlaying = !isPlaying;
+});

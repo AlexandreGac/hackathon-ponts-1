@@ -2,23 +2,24 @@
 <html lang="fr">
 
 <head>
-  <title>Ma page</title>
+  <title>Étud I.A.</title>
 
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 
 <body class="light-mode">
   <main class="main-container">
     <header class="header">
-      <button class="buttonmode" id="toggle-mode">🌙
-      </button>
-      <h1 class="header-title">Mon A.I. de mémoire</h1>
+      <button class="buttonmode" id="toggle-mode">🌙</button>
+      <h1 class="header-title">Étud I.A.</h1>
+      <button class="audio-button" id="audio-toggle">🔊</button>
     </header>
 
     <section id="messages-container" class="messages-container">
       <div class="message message-ai">
-        Je suis ton AIssistant de cours personnel ! Pose-moi une question sur
-        le cours et je te répondrai.
+        Je suis Étud, ton AIssistant de cours personnel ! Téléverse ton cours et pose-moi n'importe quelle question, ou
+        alors laisse-moi te parler un peu de l'École Nationale des Ponts et des Chaussées.
       </div>
     </section>
 
@@ -36,6 +37,11 @@
         Importer...
       </button>
     </form>
+
+    <audio id="background-music" loop>
+      <source src="{{ url_for('static', filename='music.mp3') }}" type="audio/mpeg">
+      Votre navigateur ne supporte pas la balise audio.
+    </audio>
 
     <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
     <script src="{{ url_for('static', filename='prompt.js') }}"></script>
