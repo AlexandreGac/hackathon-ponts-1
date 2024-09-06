@@ -122,6 +122,16 @@ const handlePrompt = async (event) => {  // A recopier puis modifier
     submitButton.innerHTML = "Envoyer";
   }
 
+  const textInput = data.get("prompt");
+  const image = document.getElementById('logo');
+
+  if (textInput.includes('meilleur club')) {
+      image.style.display = 'block';
+  }
+  else {
+    image.style.display = 'none';
+  }
+
   appendHumanMessage(data.get("prompt"));
 
   await appendAIMessage(async () => {

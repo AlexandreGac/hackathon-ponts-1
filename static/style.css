@@ -159,6 +159,15 @@ body {
   right: 50px;
 }
 
+.club_logo {
+  width: 300px;
+  height: 300px;
+  position: fixed;
+  top: -400px;
+  left: 200px;
+  display: none;
+}
+
 .button:hover,
 .button:active {
   background-color: var(--main-color);
